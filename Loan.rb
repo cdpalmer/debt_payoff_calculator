@@ -3,7 +3,6 @@ class Loan
   attr_accessor :title, :min_payment, :num_payments, :interest_paid
 
   def initialize args = {}
-    @num_payments      = 0
     @interest_paid     = 0.0
     @interest_rate     = args[:interest_rate]
     @original_balance  = args[:original_balance]
@@ -21,12 +20,12 @@ class Loan
     remainders = 0
 
     if @current_balance < @min_payment
-      puts "  Paying $#{@current_balance} for #{title}"
-      puts "   ** BOOM! Paid off #{title} on month #{num_payments}"
+      # puts "  Paying $#{@current_balance} for #{title}"
+      # puts "   ** BOOM! Paid off #{title} on month #{num_payments}"
       remainders = amount - @current_balance
       @current_balance = 0
     else
-      puts "  Paying $#{min_payment} for #{title}"
+      # puts "  Paying $#{min_payment} for #{title}"
       remainders = amount - @min_payment
       @current_balance -= @min_payment
     end
@@ -36,16 +35,19 @@ class Loan
 
   # Pay one-off payment of certain amount and return remainder
   def pay(amount)
-    return amount if @current_balance <= 0
+    if @current_balance <= 0 || amount == 0
+      return amount
+    end
+
     remainders = 0
 
     if @current_balance < amount
-      puts "  Paying $#{@current_balance} for #{title}"
-      puts "   ** BOOM! Paid off #{title} on month #{num_payments}"
+      # puts "  Paying $#{@current_balance} for #{title}, and paying it off"
+      # puts "   ** BOOM! Paid off #{title} on month #{num_payments}"
       remainders = amount - @current_balance
       @current_balance = 0
     else
-      puts "  Paying $#{amount} for #{title}"
+      # puts "  Paying extra $#{amount} for #{title}"
       @current_balance -= amount
       remainders = 0
     end
@@ -59,7 +61,7 @@ class Loan
 
   def apply_interest
     interest = applied_interest
-    puts "  $#{interest} interest charged for #{title}"
+    # puts "  $#{interest} interest charged for #{title}"
     @current_balance += applied_interest
     return interest
   end

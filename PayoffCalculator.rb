@@ -38,7 +38,7 @@ class PayoffCalculator
   end
 
   def print_stats
-    puts "Total debt: #{total_debt}"
+    puts "Total starting debt: #{starting_debt}"
     puts
 
     @loans.each do |l|
@@ -47,7 +47,8 @@ class PayoffCalculator
       puts "  Current balance:  $#{l.current_balance}"
       puts "  Minimum payment:  $#{l.min_payment}"
       puts "  Interest paid:    $#{l.interest_paid}"
-      puts "  Interest rate:    #{l.interest_rate}%"
+      puts "  Interest rate:    #{l.interest_rate * 100}%"
+      puts "  Paid off at:      #{l.num_payments} months"
       puts;puts;
     end
   end
@@ -58,13 +59,27 @@ class PayoffCalculator
     total
   end
 
+  def starting_debt
+    total = 0
+    @loans.each { |l| total += l.original_balance }
+    total
+  end
+
   def calculate_payoff(total_payment)
+    total_min = 0
+    @loans.each { |l| total_min += l.min_payment }
+    if total_min > total_payment
+      puts "-- WARNING -- Your total payment does not meet min payments"
+      puts "   You need at least $#{total_min}"
+      return
+    end
+
     @total_months = 1
 
     # looping monthly
     while(total_debt > 0)
       slush = total_payment
-      puts; puts; puts "===== MONTH #{@total_months} ====="
+      # puts; puts; puts "===== MONTH #{@total_months}, total minimum: $#{total_min} ====="
 
       # make min payments
       @loans.each do |l|
@@ -74,7 +89,7 @@ class PayoffCalculator
         end
       end
 
-      puts "  Leftover after minimums: $#{slush}"
+      # puts "  Leftover after minimums: $#{slush}"
       while(slush > 0 && total_debt > 0)
         @loans.each do |l|
           slush = l.pay(slush) unless l.current_balance == 0
