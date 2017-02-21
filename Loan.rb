@@ -1,9 +1,10 @@
 class Loan
   attr_accessor :interest_rate, :original_balance, :current_balance
-  attr_accessor :title, :min_payment, :num_payments
+  attr_accessor :title, :min_payment, :num_payments, :interest_paid
 
   def initialize args = {}
     @num_payments      = 0
+    @interest_paid     = 0.0
     @interest_rate     = args[:interest_rate]
     @original_balance  = args[:original_balance]
     @current_balance   = args[:current_balance] || @original_balance
@@ -33,7 +34,7 @@ class Loan
     return remainders
   end
 
-  # Pay one off payment of certain amount and return remainder
+  # Pay one-off payment of certain amount and return remainder
   def pay(amount)
     return amount if @current_balance <= 0
     remainders = 0
@@ -50,5 +51,16 @@ class Loan
     end
 
     return remainders
+  end
+
+  def applied_interest
+    (@current_balance * @interest_rate / 12).round(2)
+  end
+
+  def apply_interest
+    interest = applied_interest
+    puts "  $#{interest} interest charged for #{title}"
+    @current_balance += applied_interest
+    return interest
   end
 end
