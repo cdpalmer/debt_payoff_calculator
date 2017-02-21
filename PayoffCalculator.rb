@@ -1,9 +1,9 @@
 class PayoffCalculator
   require './Loan'
 
-  attr_accessor :loans
+  attr_accessor :loans, :total_months
 
-  def init
+  def initialize
     @loans = []
     loan_args = [
       {
@@ -14,11 +14,11 @@ class PayoffCalculator
         min_payment: 200
       },
       {
-        title: "Aspire",
-        interest_rate: 0.065,
-        original_balance: 10000,
-        current_balance: 10000,
-        min_payment: 200
+        title: "Navient",
+        interest_rate: 0.045,
+        original_balance: 12000,
+        current_balance: 12000,
+        min_payment: 275
       }
     ]
 
@@ -46,5 +46,22 @@ class PayoffCalculator
     total = 0
     @loans.each { |l| total += l.current_balance }
     total
+  end
+
+  def calculate_payoff(total_payment)
+    total_months = 0
+    max_loan = @loans.first
+    @total_months = 0
+
+    # looping monthly
+    while(total_debt > 0)
+      slush = total_payment
+      @loans.each do |l|
+        slush = l.pay_min(slush)
+      end
+
+      puts "  leftover cash this month: #{slush}"
+      @total_months += 1
+    end
   end
 end
