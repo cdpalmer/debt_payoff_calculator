@@ -34,7 +34,8 @@ class PayoffCalculator
       @loans.push(loan)
     end
 
-    @loans = @loans.sort { |a,b| b.interest_rate <=> a.interest_rate }
+    # @loans = @loans.sort { |a,b| b.interest_rate <=> a.interest_rate }
+    @loans = @loans.sort { |a,b| a.original_balance <=> b.original_balance }
   end
 
   def print_stats
@@ -56,6 +57,12 @@ class PayoffCalculator
   def total_debt
     total = 0
     @loans.each { |l| total += l.current_balance }
+    total
+  end
+
+  def total_min
+    total = 0
+    @loans.each { |l| total += l.min_payment }
     total
   end
 
