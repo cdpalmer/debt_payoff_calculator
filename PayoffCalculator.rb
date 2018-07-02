@@ -44,12 +44,12 @@ class PayoffCalculator
 
     @loans.each do |l|
       puts "#{l.title}: "
-      puts "  Original balance: $#{l.original_balance}"
-      puts "  Current balance:  $#{l.current_balance}"
-      puts "  Minimum payment:  $#{l.min_payment}"
-      puts "  Interest paid:    $#{l.interest_paid}"
-      puts "  Interest rate:    #{l.interest_rate * 100}%"
-      puts "  Paid off at:      #{l.num_payments} months"
+      puts "  Original balance: $#{l.original_balance.round(2)}"
+      # puts "  Current balance:  $#{l.current_balance.round(2)}"
+      puts "  Minimum payment:  $#{l.min_payment.round(2)}"
+      puts "  Interest paid:    $#{l.interest_paid.round(2)}"
+      puts "  Interest rate:    #{(l.interest_rate * 100).round(2)}%"
+      puts "  Paid off at:      #{l.num_payments.round(2)} months"
       puts;puts;
     end
   end
