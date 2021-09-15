@@ -7,26 +7,47 @@ class PayoffCalculator
     @loans = []
     loan_args = [
       {
-        title: "Aspire",
-        interest_rate: 0.065,
-        original_balance: 10000,
-        current_balance: 10000,
-        min_payment: 200
+        title: "Cody Loans",
+        interest_rate: 0.05,
+        original_balance: 23000,
+        current_balance: 22_500,
+        min_payment: 240
       },
       {
         title: "Navient",
-        interest_rate: 0.095,
-        original_balance: 12000,
-        current_balance: 12000,
-        min_payment: 250
+        interest_rate: 0.0287,
+        original_balance: 9990.58,
+        current_balance: 9459.58,
+        min_payment: 59
       },
       {
-        title: "Flagstar",
-        interest_rate: 0.03825,
-        original_balance: 200000,
-        current_balance: 200000,
-        min_payment: 1600
-      }
+        title: "Aspire",
+        interest_rate: 0.0498,
+        original_balance: 8942.45,
+        current_balance: 7473.45,
+        min_payment: 99
+      },
+      {
+        title: "Aspire 2",
+        interest_rate: 0.0348,
+        original_balance: 7870.42,
+        current_balance: 6815.42,
+        min_payment: 99
+      },
+      {
+        title: "OSLA",
+        interest_rate: 0.042,
+        original_balance: 12654.15,
+        current_balance: 5295.15,
+        min_payment: 286
+      },
+      {
+        title: "Capital One",
+        interest_rate: 0.21,
+        original_balance: 8000,
+        current_balance: 7600,
+        min_payment: 350
+      },
     ]
 
     loan_args.each do |args|
@@ -34,8 +55,8 @@ class PayoffCalculator
       @loans.push(loan)
     end
 
-    # @loans = @loans.sort { |a,b| b.interest_rate <=> a.interest_rate }
-    @loans = @loans.sort { |a,b| a.original_balance <=> b.original_balance }
+    @loans = @loans.sort { |a,b| b.interest_rate <=> a.interest_rate }
+    # @loans = @loans.sort { |a,b| a.original_balance <=> b.original_balance }
   end
 
   def print_stats
@@ -72,6 +93,12 @@ class PayoffCalculator
     total
   end
 
+  def current_total
+    total = 0
+    @loans.each { |l| total += l.current_balance }
+    total
+  end
+
   def calculate_payoff(total_payment)
     total_min = 0
     @loans.each { |l| total_min += l.min_payment }
@@ -82,11 +109,13 @@ class PayoffCalculator
     end
 
     @total_months = 1
+    month_totals = []
 
     # looping monthly
     while(total_debt > 0)
       slush = total_payment
-      # puts; puts; puts "===== MONTH #{@total_months}, total minimum: $#{total_min} ====="
+      puts; puts "===== MONTH #{@total_months}, current_total: $#{current_total.round(2)} ====="
+      month_totals << current_total.round(2)
 
       # make min payments
       @loans.each do |l|
